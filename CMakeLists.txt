@@ -37,15 +37,28 @@ add_executable(${PROJECT_NAME} ${SRC})
 # Link the libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad::glad glm::glm)
 
+# Sets the assets copy destination based on the build type
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(ASSETS_DESTINATION "${CMAKE_BINARY_DIR}/Debug/assets")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(ASSETS_DESTINATION "${CMAKE_BINARY_DIR}/Release/assets")
+elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  set(ASSETS_DESTINATION "${CMAKE_BINARY_DIR}/RelWithDebInfo/assets")
+elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+  set(ASSETS_DESTINATION "${CMAKE_BINARY_DIR}/MinSizeRel/assets")
+else()
+  message(FATAL_ERROR "Unknown or no build configuration specified")
+endif()
+
 # Custom command to copy the assets folder after the build process
 add_custom_command(
   TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/Debug/assets
+  ${CMAKE_SOURCE_DIR}/assets ${ASSETS_DESTINATION}
 )
 
 # Makes sure the command to copy folder is executed
 add_custom_target(
   copy_data_folder ALL
-  DEPENDS ${CMAKE_BINARY_DIR}/Debug/assets
+  DEPENDS ${ASSETS_DESTINATION}
 )
