@@ -10,7 +10,21 @@ set(CMAKE_CXX_STANDARD 20)
 project(opengl-starter CXX)
 
 # Source files
-file(GLOB_RECURSE SRC src/*.cpp src/*.hpp)
+set(SRC
+  src/main.cpp
+
+  src/file/file.cpp
+  src/file/file.hpp
+
+  src/shader/shader.cpp
+  src/shader/shader.hpp
+
+  src/state/state.cpp
+  src/state/state.hpp
+
+  src/window/window.cpp
+  src/window/window.hpp
+)
 
 # Finds the packages from vcpkg.json install location
 find_package(glfw3 CONFIG REQUIRED)
